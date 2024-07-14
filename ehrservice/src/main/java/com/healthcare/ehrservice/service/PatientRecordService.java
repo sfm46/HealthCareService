@@ -2,26 +2,35 @@ package com.healthcare.ehrservice.service;
 
 import com.healthcare.ehrservice.model.PatientRecord;
 import com.healthcare.ehrservice.repository.PatientRecordRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
+@Service
 public class PatientRecordService {
-    private final PatientRecordRepository repository;
 
-    public PatientRecordService(PatientRecordRepository repository) {
-        this.repository = repository;
+    @Autowired
+    private PatientRecordRepository repository;
+
+    public PatientRecord getPatientRecord(Long patientId) {
+        return repository.findByPatientId(patientId);
     }
 
-    public Optional<PatientRecord> getPatientRecord(String patientId) {
-        return repository.findByPatientId(patientId);
+    public PatientRecord updatePatientRecord(PatientRecord record) {
+        return repository.save(record);
     }
 
     public List<PatientRecord> getAllPatientRecords() {
         return repository.findAll();
     }
 
-    public PatientRecord updatePatientRecord(PatientRecord record) {
+    public PatientRecord createPatientRecord(PatientRecord record) {
         return repository.save(record);
     }
+
+    public void deletePatientRecord(Long id) {
+        repository.deleteById(id);
+    }
+
 }
