@@ -1,78 +1,31 @@
 package com.healthcare.ehrservice.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Date;
+import java.util.List;
+
 @Entity
+@Table
+@Getter
+@Setter
 public class PatientRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    private String patientId;
+    private Long patientId;
     private String name;
-    private Date dob;
-    private String diagnoses;
-    private String medications;
-    private String treatmentPlans;
 
-    // Getters and Setters
+    @OneToMany(mappedBy = "patientRecord", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TreatmentHistory> treatmentHistories;
 
-    public Long getId() {
-        return id;
-    }
+    @OneToMany(mappedBy = "patientRecord", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<LabData> labDataList;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @OneToMany(mappedBy = "patientRecord", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MedicineData> medicineDataList;
 
-    public String getPatientId() {
-        return patientId;
-    }
-
-    public void setPatientId(String patientId) {
-        this.patientId = patientId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Date getDob() {
-        return dob;
-    }
-
-    public void setDob(Date dob) {
-        this.dob = dob;
-    }
-
-    public String getDiagnoses() {
-        return diagnoses;
-    }
-
-    public void setDiagnoses(String diagnoses) {
-        this.diagnoses = diagnoses;
-    }
-
-    public String getMedications() {
-        return medications;
-    }
-
-    public void setMedications(String medications) {
-        this.medications = medications;
-    }
-
-    public String getTreatmentPlans() {
-        return treatmentPlans;
-    }
-
-    public void setTreatmentPlans(String treatmentPlans) {
-        this.treatmentPlans = treatmentPlans;
-    }
+    @OneToMany(mappedBy = "patientRecord", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Diagnosis> diagnoses;
 }

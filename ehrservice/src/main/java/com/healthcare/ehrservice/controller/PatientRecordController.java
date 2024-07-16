@@ -1,29 +1,61 @@
 package com.healthcare.ehrservice.controller;
 
+import com.healthcare.ehrservice.interoperability.InteroperabilityService;
 import com.healthcare.ehrservice.model.PatientRecord;
 import com.healthcare.ehrservice.service.PatientRecordService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
-
+@RestController
+@RequestMapping("/api/patient")
 public class PatientRecordController {
-    private final PatientRecordService service;
+    private final PatientRecordService patientRecordService;
+    private final InteroperabilityService interoperabilityService;
 
-    public PatientRecordController(PatientRecordService service) {
-        this.service = service;
+    public PatientRecordController(PatientRecordService patientRecordService,InteroperabilityService interoperabilityService) {
+        this.patientRecordService = patientRecordService;
+        this.interoperabilityService=interoperabilityService;
+    }
+
+    @GetMapping("/test")
+    public ResponseEntity<?> apiTest() {
+        System.out.println("ygjhhjh");
+        return ResponseEntity.ok("Application is working");
+    }
+
+    @PostMapping("/createPatientRecord")
+    public PatientRecord createPatientRecord(@RequestBody PatientRecord record) {
+        System.out.println("create "+record.toString());
+        return patientRecordService.createPatientRecord(record);
     }
 
     @GetMapping("/getPatientRecord")
-    public ResponseEntity<Optional<PatientRecord>> getPatientRecord(@RequestParam String patientId) {
-        return ResponseEntity.ok(service.getPatientRecord(patientId));
+    public ResponseEntity<PatientRecord> getPatientRecord(@RequestParam Long patientId) {
+        return ResponseEntity.ok(patientRecordService.getPatientRecord(patientId));
     }
 
     @PutMapping("/updatePatientRecord")
     public ResponseEntity<PatientRecord> updatePatientRecord(@RequestBody PatientRecord record) {
-        return ResponseEntity.ok(service.updatePatientRecord(record));
+        return ResponseEntity.ok(patientRecordService.updatePatientRecord(record));
     }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<PatientRecord>> getAllPatientRecords() {
+        return ResponseEntity.ok(patientRecordService.getAllPatientRecords());
+    }
+
+    @DeleteMapping("/deletePatientRecord/{id}")
+    public void deletePatientRecord(@PathVariable Long id) {
+        patientRecordService.deletePatientRecord(id);
+    }
+
+    @GetMapping("/exportHL7")
+    public String exportFHIR(@RequestParam Long patientId) {
+        PatientRecord patientRecord = patientRecordService.getPatientRecord(patientId);
+        return interoperabilityService.convertToFHIRFormat(patientRecord);
+    }
+
+  
 }
