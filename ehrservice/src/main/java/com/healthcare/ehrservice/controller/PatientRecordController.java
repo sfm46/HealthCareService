@@ -52,10 +52,10 @@ public class PatientRecordController {
     }
 
     @GetMapping("/exportHL7")
-    public String exportFHIR(@RequestParam Long patientId) {
+    public String exportHL7(@RequestParam Long patientId) {
         PatientRecord patientRecord = patientRecordService.getPatientRecord(patientId);
-        return interoperabilityService.convertToFHIRFormat(patientRecord);
+        return interoperabilityService.convertToHL7Format(patientRecord);
     }
 
-  
+
 }

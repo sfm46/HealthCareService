@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 public class InteroperabilityService {
 
     // Method to handle FHIR data exchange
-    public String convertToFHIRFormat(PatientRecord patientData) {
+    public String convertToHL7Format(PatientRecord patientData) {
        return Hl7MessageBuilder.buildHl7Message(patientData);
     }
 
